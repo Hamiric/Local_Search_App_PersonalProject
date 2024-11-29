@@ -11,7 +11,7 @@ class LocationRepo {
     final client = Client();
 
     final response = await client.get(
-      Uri.parse('https://openapi.naver.com/v1/search/local.json?query=$query'),
+      Uri.parse('https://openapi.naver.com/v1/search/local.json?query=$query&display=5'),
       headers: {
         'X-Naver-Client-Id': 'jfHyBNLifIBppk63vqd0',
         'X-Naver-Client-Secret': 'Xv_qhMk9VF',

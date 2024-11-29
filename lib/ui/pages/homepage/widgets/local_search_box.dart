@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:local_search_app_personalproject/ui/pages/detailpage/detailpage.dart';
 
 class LocalSearchBox extends StatelessWidget {
-  const LocalSearchBox({super.key});
+  const LocalSearchBox({super.key, this.location});
+
+  final location;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class LocalSearchBox extends StatelessWidget {
             children: [
               // title
               Text(
-                '삼성1동 주민센터',
+                location.title,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -35,7 +37,7 @@ class LocalSearchBox extends StatelessWidget {
               ),
               // category
               Text(
-                '공공, 사회기관>행정복지센터',
+                location.category,
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   overflow: TextOverflow.ellipsis
@@ -43,7 +45,7 @@ class LocalSearchBox extends StatelessWidget {
               ),
               // roadAddress
               Text(
-                '서울특별시 강남구 봉은차로 616 삼성1동 주민센터',
+                location.roadAddress,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
