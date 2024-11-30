@@ -44,6 +44,14 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.read(homeViewModelProvier.notifier).searchLocation(text);
             },
           ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                ref.read(homeViewModelProvier.notifier).searchCurrentLocation();
+              }, 
+              icon: Icon(Icons.gps_fixed),
+            ),
+          ],
         ),
         body: SafeArea(
           child: Padding(
