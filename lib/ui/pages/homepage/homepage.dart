@@ -39,6 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             controller: _searchController,
             decoration: InputDecoration(
                 border: OutlineInputBorder(), labelText: '지역이름검색'),
+            // 에뮬환경에서는 onsubmitted보다 onChanged가 더 좋아보임 ㅎㅎ
             onChanged: (text) {
               ref.read(homeViewModelProvier.notifier).searchLocation(text);
             },
