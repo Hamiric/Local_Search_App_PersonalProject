@@ -12,7 +12,7 @@ class LocalSearchBox extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context, 
-          MaterialPageRoute(builder: (context) => DetailPage()),
+          MaterialPageRoute(builder: (context) => DetailPage(location: location,)),
         );
       },
       child: Container(
