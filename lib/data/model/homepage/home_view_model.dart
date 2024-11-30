@@ -8,7 +8,7 @@ import 'package:local_search_app_personalproject/data/repo/vworld_repo.dart';
 // 홈 상태 클래스
 class HomeState {
   List<LocationModel> locations;
-
+  
   HomeState(this.locations);
 }
 
@@ -49,7 +49,6 @@ class HomeViewModel extends Notifier<HomeState>{
       // gps 버튼이 제대로 작동하지 않으므로 대응
       print('gps 미작동');
     }
-
   }
 }
 
