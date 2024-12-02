@@ -49,7 +49,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             IconButton(
               onPressed: () {
                 ref.read(homeViewModelProvier.notifier).startLoading();
-                 ref
+                ref
                     .read(homeViewModelProvier.notifier)
                     .searchCurrentLocation()
                     .then((_) {
@@ -66,17 +66,21 @@ class _HomePageState extends ConsumerState<HomePage> {
             padding: const EdgeInsets.all(20),
             child: homeState.loadState
                 ? LoadingBody()
-                : ListView.separated(
-                    itemCount: homeState.locations.length,
-                    itemBuilder: (context, index) {
-                      return LocalSearchBox(
-                        location: homeState.locations[index],
-                      );
-                    },
-                    separatorBuilder: (context, index) => SizedBox(
-                      height: 20,
-                    ),
-                  ),
+                : homeState.locations.isEmpty
+                    ? Center(
+                        child: Text('검색결과가 없습니다.'),
+                      )
+                    : ListView.separated(
+                        itemCount: homeState.locations.length,
+                        itemBuilder: (context, index) {
+                          return LocalSearchBox(
+                            location: homeState.locations[index],
+                          );
+                        },
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: 20,
+                        ),
+                      ),
           ),
         ),
       ),
