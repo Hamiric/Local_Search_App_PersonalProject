@@ -44,6 +44,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ref.read(homeViewModelProvier.notifier).startLoading();
               ref.read(homeViewModelProvier.notifier).searchLocation(text);
             },
+            enabled: !homeState.loadState,
           ),
           actions: [
             IconButton(
