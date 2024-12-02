@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_search_app_personalproject/data/model/detailpage/detail_view_model.dart';
 import 'package:local_search_app_personalproject/ui/pages/detailpage/widgets/detail_chat_room.dart';
@@ -19,19 +18,28 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   Widget build(BuildContext context) {
     final detailState = ref.watch(detailViewModelProvier);
 
-    List<Widget> widgetOptions = [DetailInappwebivew(location: widget.location,),DetailChatRoom()];
+    List<Widget> widgetOptions = [
+      DetailInappwebivew(
+        location: widget.location,
+      ),
+      DetailChatRoom()
+    ];
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('${widget.location.title}'),
       ),
-      body: widgetOptions.elementAt(detailState.bottomNavigationBarSelectedIndex),
+      body: SafeArea(
+          child: widgetOptions
+              .elementAt(detailState.bottomNavigationBarSelectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: detailState.bottomNavigationBarSelectedIndex,
           selectedItemColor: Colors.amber[800],
           onTap: (index) {
-            ref.read(detailViewModelProvier.notifier).changeBottomNavigationBarSelectedIndex(index);
+            ref
+                .read(detailViewModelProvier.notifier)
+                .changeBottomNavigationBarSelectedIndex(index);
           },
           items: [
             BottomNavigationBarItem(
