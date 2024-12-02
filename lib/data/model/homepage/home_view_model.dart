@@ -8,8 +8,10 @@ import 'package:local_search_app_personalproject/data/repo/vworld_repo.dart';
 // 홈 상태 클래스
 class HomeState {
   List<LocationModel> locations;
+  String controllerText;
+  bool loadState;
   
-  HomeState(this.locations);
+  HomeState(this.locations, this.loadState, this.controllerText);
 }
 
 // 홈 뷰모델 클래스
@@ -17,7 +19,7 @@ class HomeViewModel extends Notifier<HomeState>{
   // 상태 초기화
   @override
   HomeState build(){
-    return HomeState([]);
+    return HomeState([], false, '');
   }
 
   // 검색시 상태 업데이트
@@ -28,7 +30,7 @@ class HomeViewModel extends Notifier<HomeState>{
     final locationRepo = LocationRepo();
     final response = await locationRepo.searchLocation(query);
 
-    state = HomeState(response);
+    state = HomeState(response, false, query);
   }
 
   // gps 버튼을 눌렀을때 작동하는 메서드
@@ -49,6 +51,11 @@ class HomeViewModel extends Notifier<HomeState>{
       // gps 버튼이 제대로 작동하지 않으므로 대응
       print('gps 미작동');
     }
+  }
+
+  // 검색을 하게 되는 순간 딜레이 시간에 로딩화면이 뜰 수 있도록 하는 메서드
+  void startLoading(){
+    state = HomeState(state.locations, true, state.controllerText);
   }
 }
 

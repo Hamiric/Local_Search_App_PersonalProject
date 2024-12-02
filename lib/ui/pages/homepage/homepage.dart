@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_search_app_personalproject/data/model/homepage/home_view_model.dart';
+import 'package:local_search_app_personalproject/ui/pages/homepage/widgets/loading_body.dart';
 import 'package:local_search_app_personalproject/ui/pages/homepage/widgets/local_search_box.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -40,14 +41,22 @@ class _HomePageState extends ConsumerState<HomePage> {
             decoration: InputDecoration(
                 border: OutlineInputBorder(), labelText: '지역이름검색'),
             onSubmitted: (text) {
+              ref.read(homeViewModelProvier.notifier).startLoading();
               ref.read(homeViewModelProvier.notifier).searchLocation(text);
             },
           ),
           actions: [
             IconButton(
               onPressed: () {
-                ref.read(homeViewModelProvier.notifier).searchCurrentLocation();
-              }, 
+                ref.read(homeViewModelProvier.notifier).startLoading();
+                 ref
+                    .read(homeViewModelProvier.notifier)
+                    .searchCurrentLocation()
+                    .then((_) {
+                  final text = ref.read(homeViewModelProvier).controllerText;
+                  _searchController.text = text;
+                });
+              },
               icon: Icon(Icons.gps_fixed),
             ),
           ],
@@ -55,15 +64,19 @@ class _HomePageState extends ConsumerState<HomePage> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: ListView.separated(
-              itemCount: homeState.locations.length,
-              itemBuilder: (context, index) {
-                return LocalSearchBox(location: homeState.locations[index],);
-              },
-              separatorBuilder: (context, index) => SizedBox(
-                height: 20,
-              ),
-            ),
+            child: homeState.loadState
+                ? LoadingBody()
+                : ListView.separated(
+                    itemCount: homeState.locations.length,
+                    itemBuilder: (context, index) {
+                      return LocalSearchBox(
+                        location: homeState.locations[index],
+                      );
+                    },
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 20,
+                    ),
+                  ),
           ),
         ),
       ),
