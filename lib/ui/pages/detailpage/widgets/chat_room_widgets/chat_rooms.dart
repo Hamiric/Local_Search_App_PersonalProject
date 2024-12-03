@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class ChatRooms extends StatelessWidget {
@@ -83,13 +85,28 @@ class ChatRooms extends StatelessWidget {
   }
 
   Widget chatDateTime(){
-    String time = '${detailState.chatRooms[index].update_date.year}-${detailState.chatRooms[index].update_date.month}-${detailState.chatRooms[index].update_date.day}';
-    
-    return Text(
-      time,
-      style: TextStyle(
-        color: Colors.grey
-      ),
+    String date = '${detailState.chatRooms[index].update_date.year}-${detailState.chatRooms[index].update_date.month}-${detailState.chatRooms[index].update_date.day}';
+
+    String apm = detailState.chatRooms[index].update_date.hour > 12 ? '오후' : '오전';
+    int hour = detailState.chatRooms[index].update_date.hour > 12 ? detailState.chatRooms[index].update_date.hour - 12 : detailState.chatRooms[index].update_date.hour;
+    String time = '$apm $hour:${detailState.chatRooms[index].update_date.minute}';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          date,
+          style: TextStyle(
+            color: Colors.grey
+          ),
+        ),
+        Text(
+          time,
+          style: TextStyle(
+            color: Colors.grey
+          ),
+        ),
+      ],
     );
   }
 }

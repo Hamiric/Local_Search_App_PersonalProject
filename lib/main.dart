@@ -1,9 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:local_search_app_personalproject/data/repo/chatroom_repo.dart';
 import 'package:local_search_app_personalproject/ui/pages/homepage/homepage.dart';
-import 'package:uuid/uuid.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -13,11 +11,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  final chatroomRepo = ChatroomRepo();
+
+  // final chatroomRepo = ChatroomRepo();
   
   /*
   var uuid = Uuid();
-  String id = '김천동 주민센터' + uuid.v4();
+  String id = '여의동 주민센터' + uuid.v4();
   await chatroomRepo.insert(
       chatroom_id: id,
       chatroom_name : 'ABCD',
@@ -32,6 +31,7 @@ void main() async {
         {"nickname": "tester", "imgURL": "https://picsum.photos/300/300"}
       ]);
   */
+
   /*
   print((await chatroomRepo.getAll()).length);
   print((await chatroomRepo.getSearch('여의동 주민센터')).length);
