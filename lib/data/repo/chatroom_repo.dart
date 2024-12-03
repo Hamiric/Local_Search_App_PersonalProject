@@ -10,8 +10,33 @@ class ChatroomRepo {
     QuerySnapshot snapshot = await collectionRef.get();
     List<QueryDocumentSnapshot> documentSnapshots = snapshot.docs;
 
-    final list = documentSnapshots.map((e){
-      final map = e.data() as Map<String,dynamic>;
+    final list = documentSnapshots.map((e) {
+      final map = e.data() as Map<String, dynamic>;
+      final newMap = {
+        'chatroom_id': e.id,
+        ...map,
+      };
+
+      return ChatroomModel.fromJson(newMap);
+    }).toList();
+
+    return list;
+  }
+
+  // 'chatroom' 콜렉션의 문서들중 query 가 앞에 있는 채팅방만 반환
+  Future<List<ChatroomModel>> getSearch(String query) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference collectionRef = firestore.collection('chatroom');
+
+    QuerySnapshot snapshot = await collectionRef.get();
+    List<QueryDocumentSnapshot> documentSnapshots = snapshot.docs;
+
+    final docs = documentSnapshots.where((e){
+      return e.id.contains(query);
+    });
+
+    final list = docs.map((e) {
+      final map = e.data() as Map<String, dynamic>;
       final newMap = {
         'chatroom_id': e.id,
         ...map,
@@ -26,6 +51,7 @@ class ChatroomRepo {
   // 'chatroom' 에 문서로 데이터 집어넣기
   Future<bool> insert(
       {required String chatroom_id,
+      required String chatroom_name,
       required DateTime update_date,
       required String imgURL,
       required String password,
@@ -38,6 +64,7 @@ class ChatroomRepo {
       final docRef = collectionRef.doc(chatroom_id);
 
       final map = {
+        "chatroom_name": chatroom_name,
         "update_date": update_date.toIso8601String(),
         "imgURL": imgURL,
         "password": password,
@@ -51,6 +78,4 @@ class ChatroomRepo {
       return false;
     }
   }
-  
-
 }

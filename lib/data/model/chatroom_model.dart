@@ -1,7 +1,7 @@
 /*
 {
-  "chatroom_id": "ABCD",
-  "update_date": timestamp 형태,
+  "chatroom_id": "(location.title)_uuid.v4()",
+  "update_date": DateTime.now(),
   "imgURL": "https://picsum.photos/300/300",
   "password": "1111",
   "creater_info": {
@@ -19,6 +19,7 @@
 
 class ChatroomModel {
   String chatroom_id;
+  String chatroom_name;
   DateTime update_date;
   String imgURL;
   String password;
@@ -27,6 +28,7 @@ class ChatroomModel {
 
   ChatroomModel({
     required this.chatroom_id,
+    required this.chatroom_name,
     required this.update_date,
     required this.imgURL,
     required this.password,
@@ -36,6 +38,7 @@ class ChatroomModel {
 
   ChatroomModel.fromJson(Map<String,dynamic> json) : this (
     chatroom_id : json['chatroom_id'],
+    chatroom_name: json['chatroom_name'],
     update_date : DateTime.parse(json['update_date']),
     imgURL : json['imgURL'],
     password : json['password'],
@@ -46,6 +49,7 @@ class ChatroomModel {
   Map<String,dynamic> toJson(){
     return {
       "chatroom_id" : chatroom_id,
+      "chatroom_name" : chatroom_name,
       "update_date" : update_date.toIso8601String(),
       "imgURL" : imgURL,
       "password" : password,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ChatRooms extends StatelessWidget {
-  const ChatRooms({super.key, required this.index});
-
+  const ChatRooms({super.key, required this.index, this.detailState});
+  
+  final detailState;
   final int index;
 
   @override
@@ -33,7 +34,7 @@ class ChatRooms extends StatelessWidget {
           width: 50,
           height: 50,
           child: Image.network(
-            'https://picsum.photos/300/300',
+            detailState.chatRooms[index].imgURL,
             fit: BoxFit.cover,
           ),
         ),
@@ -51,7 +52,7 @@ class ChatRooms extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  '$index 채팅방',
+                  '${detailState.chatRooms[index].chatroom_name}',
                   maxLines: 1,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -61,7 +62,7 @@ class ChatRooms extends StatelessWidget {
               ),
               SizedBox(width: 10,),
               Text(
-                '10명',
+                '${detailState.chatRooms[index].body.length}명',
                 style: TextStyle(
                   color: Colors.grey,
                 ),
@@ -82,8 +83,10 @@ class ChatRooms extends StatelessWidget {
   }
 
   Widget chatDateTime(){
+    String time = '${detailState.chatRooms[index].update_date.year}-${detailState.chatRooms[index].update_date.month}-${detailState.chatRooms[index].update_date.day}';
+    
     return Text(
-      '2024-12-01',
+      time,
       style: TextStyle(
         color: Colors.grey
       ),

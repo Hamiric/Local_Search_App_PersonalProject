@@ -14,6 +14,13 @@ class DetailPage extends ConsumerStatefulWidget {
 }
 
 class _DetailPageState extends ConsumerState<DetailPage> {
+
+  @override
+  void initState() {
+    ref.read(detailViewModelProvier.notifier).setChatRoom(widget.location.title);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final detailState = ref.watch(detailViewModelProvier);
@@ -22,7 +29,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
       DetailInappwebivew(
         location: widget.location,
       ),
-      DetailChatRoom()
+      DetailChatRoom(detailState: detailState,),
     ];
 
     return Scaffold(
