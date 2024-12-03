@@ -4,9 +4,10 @@ import 'package:local_search_app_personalproject/ui/pages/detailpage/widgets/cha
 import 'package:local_search_app_personalproject/ui/pages/detailpage/widgets/chat_room_widgets/option_bar.dart';
 
 class DetailChatRoom extends StatelessWidget {
-  const DetailChatRoom({super.key, this.detailState});
+  const DetailChatRoom({super.key, this.detailState, this.location});
 
   final detailState;
+  final location;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class DetailChatRoom extends StatelessWidget {
           height: 10,
         ),
         // 카카오톡 채팅방 리스트 화면 참고할 예정
-        OptionBar(),
+        OptionBar(location),
         // 채팅방 listview
         Expanded(
           child: ListView.separated(

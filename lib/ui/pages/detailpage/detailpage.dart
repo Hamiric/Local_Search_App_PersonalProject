@@ -29,7 +29,7 @@ class _DetailPageState extends ConsumerState<DetailPage> {
       DetailInappwebivew(
         location: widget.location,
       ),
-      DetailChatRoom(detailState: detailState,),
+      DetailChatRoom(detailState: detailState,location: widget.location,),
     ];
 
     return Scaffold(

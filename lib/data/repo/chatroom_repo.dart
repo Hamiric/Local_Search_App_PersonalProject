@@ -24,7 +24,7 @@ class ChatroomRepo {
   }
 
   // 'chatroom' 콜렉션의 문서들중 query 가 앞에 있는 채팅방만 반환
-  Future<List<ChatroomModel>> getSearch(String query) async {
+  Future<List<ChatroomModel>> getById(String query) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference collectionRef = firestore.collection('chatroom');
 
@@ -49,6 +49,7 @@ class ChatroomRepo {
   }
 
   // 'chatroom' 에 문서로 데이터 집어넣기
+  // 즉, 새로운 채팅방 만드는 메서드
   Future<bool> insert(
       {required String chatroom_id,
       required String chatroom_name,
