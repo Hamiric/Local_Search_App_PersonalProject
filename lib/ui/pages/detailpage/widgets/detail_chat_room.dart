@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_search_app_personalproject/ui/pages/chatpage/chatpage.dart';
 import 'package:local_search_app_personalproject/ui/pages/detailpage/widgets/chat_room_widgets/chat_rooms.dart';
 import 'package:local_search_app_personalproject/ui/pages/detailpage/widgets/chat_room_widgets/option_bar.dart';
 
@@ -17,7 +18,14 @@ class DetailChatRoom extends StatelessWidget {
           child: ListView.separated(
             itemCount: 2,
             itemBuilder:(context, index) {
-              return ChatRooms(index: index,);
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => Chatpage(),
+                  ));
+                },
+                child: ChatRooms(index: index,)
+              );
             },
             separatorBuilder: (context, index) {
               return SizedBox(height: 10,);
