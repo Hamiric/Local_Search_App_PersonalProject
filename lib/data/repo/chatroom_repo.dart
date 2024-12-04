@@ -24,6 +24,8 @@ class ChatroomRepo {
   }
 
   // 'chatroom' 콜렉션의 문서들중 query 가 앞에 있는 채팅방만 반환
+  // 채팅방 읽어올때, update_date를 기준으로 정렬되어 반환
+  // 가장 최근 업데이트된 채팅방부터 최상위
   Future<List<ChatroomModel>> getById(String query) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference collectionRef = firestore.collection('chatroom');
@@ -45,7 +47,10 @@ class ChatroomRepo {
       return ChatroomModel.fromJson(newMap);
     }).toList();
 
-    return list;
+    list.sort((a,b) => a.update_date.compareTo(b.update_date));
+    final orderList = list.reversed.toList();
+
+    return orderList;
   }
 
   // 'chatroom' 에 문서로 데이터 집어넣기
