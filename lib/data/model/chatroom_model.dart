@@ -6,12 +6,12 @@
   "password": "1111",
   "creater_info": {
     "nickname" : "tester",
-    "imgURL" : "https://picsum.photos/300/300"
+    "imgURL" : "https://picsum.photos/300/300" -- 없어짐
   },
   "body" : [
     {
       "nickname" : "tester",
-      "imgURL" : "https://picsum.photos/300/300"
+      "imgURL" : "https://picsum.photos/300/300" -- 없어짐
     }
   ]
 }

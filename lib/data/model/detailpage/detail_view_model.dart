@@ -58,10 +58,9 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState>{
       password: password,
       creater_info: {
         "nickname": nickname,
-        "imgURL": imgURL
       },
       body: [
-        {"nickname": nickname, "imgURL": imgURL}
+        {"nickname": nickname}
       ]);
     
     await setChatRoom(id);

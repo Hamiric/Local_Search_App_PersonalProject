@@ -28,7 +28,7 @@ class DetailChatRoom extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Chatpage(),
+                          builder: (context) => Chatpage(detailState.chatRooms[index]),
                         ));
                   },
                   child: ChatRooms(
