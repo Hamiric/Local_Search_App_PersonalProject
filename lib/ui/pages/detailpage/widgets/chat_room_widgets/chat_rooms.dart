@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:local_search_app_personalproject/data/model/detailpage/detail_view_model.dart';
 
 class ChatRooms extends StatelessWidget {
-  const ChatRooms({super.key, required this.index, this.detailState});
+  const ChatRooms(
+      {super.key, required this.index, this.detailState, this.location});
 
+  final location;
   final detailState;
   final int index;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 14, right: 24),
+      padding: const EdgeInsets.only(left: 14, right: 4),
       child: Row(
         // Chat Room Image
         // Room title
@@ -24,6 +28,7 @@ class ChatRooms extends StatelessWidget {
             width: 10,
           ),
           chatDateTime(),
+          deleteButton(),
         ],
       ),
     );
@@ -117,6 +122,19 @@ class ChatRooms extends StatelessWidget {
           style: TextStyle(color: Colors.grey),
         ),
       ],
+    );
+  }
+
+  Widget deleteButton() {
+    return Consumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        return IconButton(
+          onPressed: () {
+            ref.read(detailViewModelProvier.notifier).deleteChatRoom(detailState.chatRooms[index], location.title);
+          },
+          icon: Icon(Icons.delete),
+        );
+      },
     );
   }
 }

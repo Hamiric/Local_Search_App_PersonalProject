@@ -252,6 +252,7 @@ class _OptionBarState extends ConsumerState<OptionBar> {
                   if (!isValid) {
                     return;
                   } else {
+                    print(controllerPassWord.text);
                     // 채팅창 만들기
                     ref.read(detailViewModelProvier.notifier).insertNewChatRoom(
                         widget.location.title,

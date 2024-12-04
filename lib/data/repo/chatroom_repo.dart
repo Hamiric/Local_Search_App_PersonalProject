@@ -89,14 +89,28 @@ class ChatroomRepo {
     }
   }
 
+  // 'chatroom'의 선택된 채팅방 삭제 메서드
+  // 삭제할때, 스토리지에 저장된 이미지도 같이 삭제해야 한다.
+  // 채팅로그들도 삭제해야 함
+  Future<void> deleteById(ChatroomModel chatroom) async {
+    String url = chatroom.imgURL.split('/o/')[1].split('?')[0];
+    await FirebaseStorage.instance.ref(url).delete();
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference collectionRef = firestore.collection('chatroom');
+
+    DocumentReference documentRef = collectionRef.doc(chatroom.chatroom_id);
+    await documentRef.delete();
+  }
+
   // 이미지 업로드 (파이어베이스 스토리지)
   // path 에 null 값이 들어오는 경우, assets의 default_img가 업로드
   // 업로드 이후 DownloadURL 반환
-  Future<String> uploadImage(String? path, String id) async {
+  Future<String> uploadImage(String? path, String uuid) async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference storageRef = storage.ref();
     final imageRef =
-        storageRef.child('${DateTime.now().microsecondsSinceEpoch}_$id');
+        storageRef.child('${DateTime.now().microsecondsSinceEpoch}_$uuid');
 
     if (path == null) {
       String _defaultImage = 'assets/images/default_img.jpg';

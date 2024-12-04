@@ -34,6 +34,7 @@ class DetailChatRoom extends StatelessWidget {
                   child: ChatRooms(
                     index: index,
                     detailState: detailState,
+                    location: location,
                   ));
             },
             separatorBuilder: (context, index) {

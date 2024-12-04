@@ -46,16 +46,16 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState>{
     final chatroomRepo = ChatroomRepo();
     var uuid = Uuid();
 
-    String chatroomId = id + uuid.v4();
+    String chatroomuuid = uuid.v4();
 
-    final downloadURL = await chatroomRepo.uploadImage(imgURL,chatroomId);
+    final downloadURL = await chatroomRepo.uploadImage(imgURL, chatroomuuid);
 
     await chatroomRepo.insert(
-      chatroom_id: chatroomId,
+      chatroom_id: id + chatroomuuid,
       chatroom_name : chatroom_name,
       update_date: DateTime.now(),
       imgURL: downloadURL,
-      password: '1111',
+      password: password,
       creater_info: {
         "nickname": nickname,
         "imgURL": imgURL
@@ -64,6 +64,12 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState>{
         {"nickname": nickname, "imgURL": imgURL}
       ]);
     
+    await setChatRoom(id);
+  }
+
+  Future<void> deleteChatRoom(ChatroomModel chatRoom, String id) async{
+    final chatroomRepo = ChatroomRepo();
+    await chatroomRepo.deleteById(chatRoom);
     await setChatRoom(id);
   }
 
