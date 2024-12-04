@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:local_search_app_personalproject/data/model/detailpage/detail_view_model.dart';
 
 class OptionBar extends ConsumerStatefulWidget {
@@ -114,118 +117,164 @@ class _OptionBarState extends ConsumerState<OptionBar> {
   }
 
   Widget plusChatRoomDialog(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: AlertDialog(
-        title: Text('채팅방 만들기'),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // 이미지
-              GestureDetector(
-                onTap: () {},
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: Container(
-                      color: Colors.blue[300],
-                      child: Center(
-                        child: Icon(Icons.image),
+    final detailState = ref.watch(detailViewModelProvier);
+
+    return StatefulBuilder(builder: (BuildContext context, setState) {
+      return GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: AlertDialog(
+          title: Text('채팅방 만들기'),
+          content: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 이미지
+                  GestureDetector(
+                    onTap: () async {
+                      final imagePicker = ImagePicker();
+
+                      var image = await imagePicker.pickImage(
+                          source: ImageSource.gallery);
+                      if (image != null) {
+                        print('이미지 선택');
+
+                        // AlertDialog에서 ref.read 방식으로는 Dialog 새로고침이 안되서
+                        // setState 사용..
+                        setState(() {
+                          detailState.selectedImagePath = image.path;
+                        });
+                      } else {
+                        print('이미지 선택 안함');
+                      }
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: detailState.selectedImagePath == null
+                                ? AssetImage('assets/images/default_img.jpg')
+                                : FileImage(
+                                    File(detailState.selectedImagePath!)),
+                          )),
+                          child: Center(
+                            child: Icon(
+                              Icons.image,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              // 채팅방 name 입력
-              SizedBox(
-                width: double.maxFinite,
-                child: TextFormField(
-                  controller: controllerChatRoomName,
-                  validator: validatorChatRoomName,
-                  decoration: InputDecoration(
-                    hintText: '새로운 채팅방 이름을 입력해주세요',
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
-                    border: OutlineInputBorder(),
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              // Creater_Nickname
-              SizedBox(
-                width: double.maxFinite,
-                child: TextFormField(
-                  controller: controllerNickName,
-                  validator: validatorNickName,
-                  decoration: InputDecoration(
-                    hintText: '개설자의 닉네임을 입력해주세요',
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
+                  // 채팅방 name 입력
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: TextFormField(
+                      controller: controllerChatRoomName,
+                      validator: validatorChatRoomName,
+                      decoration: InputDecoration(
+                        hintText: '새로운 채팅방 이름을 입력해주세요',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                    border: OutlineInputBorder(),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              // password
-              SizedBox(
-                width: double.maxFinite,
-                child: TextFormField(
-                  controller: controllerPassWord,
-                  validator: validatorPassWord,
-                  maxLength: 4,
-                  decoration: InputDecoration(
-                    hintText: '비밀번호를 입력해주세요',
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  // Creater_Nickname
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: TextFormField(
+                      controller: controllerNickName,
+                      validator: validatorNickName,
+                      decoration: InputDecoration(
+                        hintText: '개설자의 닉네임을 입력해주세요',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
                   ),
-                ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  // password
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: TextFormField(
+                      controller: controllerPassWord,
+                      validator: validatorPassWord,
+                      maxLength: 4,
+                      decoration: InputDecoration(
+                        hintText: '비밀번호를 입력해주세요',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        labelText: 'Password',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('취소')),
-          TextButton(
-              onPressed: () {
-                final bool isValid = formKey.currentState?.validate() ?? false;
-                if (!isValid) {
-                  return;
-                } else {
-                  // 채팅창 만들기
-                  ref.read(detailViewModelProvier.notifier).insertNewChatRoom(
-                      widget.location.title,
-                      controllerChatRoomName.text,
-                      controllerNickName.text,
-                      controllerPassWord.text,
-                      "");
+          actions: [
+            TextButton(
+                onPressed: () {
+                  ref.read(detailViewModelProvier.notifier).initSelectedImage();
+                  controllerChatRoomName.text = '';
+                  controllerNickName.text = '';
+                  controllerPassWord.text = '';
                   Navigator.pop(context);
-                }
-              },
-              child: Text('만들기')),
-        ],
-      ),
-    );
+                },
+                child: Text('취소')),
+            TextButton(
+                onPressed: () {
+                  final bool isValid =
+                      formKey.currentState?.validate() ?? false;
+                  if (!isValid) {
+                    return;
+                  } else {
+                    // 채팅창 만들기
+                    ref.read(detailViewModelProvier.notifier).insertNewChatRoom(
+                        widget.location.title,
+                        controllerChatRoomName.text,
+                        controllerNickName.text,
+                        controllerPassWord.text,
+                        detailState.selectedImagePath!);
+
+                    // 초기화
+                    ref
+                        .read(detailViewModelProvier.notifier)
+                        .initSelectedImage();
+                    controllerChatRoomName.text = '';
+                    controllerNickName.text = '';
+                    controllerPassWord.text = '';
+
+                    Navigator.pop(context);
+                  }
+                },
+                child: Text('만들기')),
+          ],
+        ),
+      );
+    });
   }
 }

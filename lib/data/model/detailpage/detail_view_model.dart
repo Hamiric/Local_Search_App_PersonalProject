@@ -7,19 +7,26 @@ class DetailState{
   int bottomNavigationBarSelectedIndex;
   List<ChatroomModel> chatRooms;
 
-  DetailState(this.bottomNavigationBarSelectedIndex, this.chatRooms);
+  String? selectedImagePath;
+
+  DetailState(this.bottomNavigationBarSelectedIndex, this.chatRooms, this.selectedImagePath);
 }
 
 class DetailViewModel extends AutoDisposeNotifier<DetailState>{
 
   @override
   DetailState build(){
-    return DetailState(0, []);
+    return DetailState(0, [], null);
+  }
+
+  // 새로고침
+  void refresh(){
+    state = DetailState(state.bottomNavigationBarSelectedIndex, state.chatRooms, state.selectedImagePath);
   }
 
   // 바텀 네비게이션 인덱스를 관리하는 메서드
   void changeBottomNavigationBarSelectedIndex(int index){
-    state = DetailState(index, state.chatRooms);
+    state = DetailState(index, state.chatRooms, state.selectedImagePath);
   }
 
   // 현재 지역 채팅방 리스트를 가져오는 메서드
@@ -29,20 +36,25 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState>{
     final chatroomRepo = ChatroomRepo();
     List<ChatroomModel> list = await chatroomRepo.getById(title);
 
-    state = DetailState(state.bottomNavigationBarSelectedIndex, list);
+    state = DetailState(state.bottomNavigationBarSelectedIndex, list, state.selectedImagePath);
   }
 
   // 새로운 채팅방을 DB에 넣는 메서드
+  // 이미지도 스토리지에 업로드
   // 넣고 다시 DB를 읽기
   Future<void> insertNewChatRoom(String id, String chatroom_name, String nickname, String password, String imgURL) async{
     final chatroomRepo = ChatroomRepo();
     var uuid = Uuid();
 
+    String chatroomId = id + uuid.v4();
+
+    final downloadURL = await chatroomRepo.uploadImage(imgURL,chatroomId);
+
     await chatroomRepo.insert(
-      chatroom_id: id + uuid.v4(),
+      chatroom_id: chatroomId,
       chatroom_name : chatroom_name,
       update_date: DateTime.now(),
-      imgURL: imgURL,
+      imgURL: downloadURL,
       password: '1111',
       creater_info: {
         "nickname": nickname,
@@ -53,6 +65,16 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState>{
       ]);
     
     await setChatRoom(id);
+  }
+
+  // ImagePicker 이미지 넣기
+  void selectedImage(String imagePath){
+    state = DetailState(state.bottomNavigationBarSelectedIndex, state.chatRooms, imagePath);
+  }
+
+  // 이미지 초기화
+  void initSelectedImage(){
+    state = DetailState(state.bottomNavigationBarSelectedIndex, state.chatRooms, null);
   }
 }
 

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:local_search_app_personalproject/data/model/chatroom_model.dart';
 
 class ChatroomRepo {
@@ -83,5 +86,17 @@ class ChatroomRepo {
     } catch (e) {
       return false;
     }
+  }
+
+  // 이미지 업로드 (파이어베이스 스토리지)
+  // 업로드 이후 DownloadURL 반환
+  Future<String> uploadImage(String path, String id) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference storageRef = storage.ref();
+    final imageRef = storageRef.child('${DateTime.now().microsecondsSinceEpoch}_$id');
+
+    await imageRef.putFile(File(path));
+    final url = await imageRef.getDownloadURL();
+    return url;
   }
 }
