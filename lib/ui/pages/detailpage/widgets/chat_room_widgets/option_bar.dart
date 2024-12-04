@@ -258,7 +258,7 @@ class _OptionBarState extends ConsumerState<OptionBar> {
                         controllerChatRoomName.text,
                         controllerNickName.text,
                         controllerPassWord.text,
-                        detailState.selectedImagePath!);
+                        detailState.selectedImagePath);
 
                     // 초기화
                     ref

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:local_search_app_personalproject/data/model/chatroom_model.dart';
 
 class ChatroomRepo {
@@ -36,7 +37,7 @@ class ChatroomRepo {
     QuerySnapshot snapshot = await collectionRef.get();
     List<QueryDocumentSnapshot> documentSnapshots = snapshot.docs;
 
-    final docs = documentSnapshots.where((e){
+    final docs = documentSnapshots.where((e) {
       return e.id.contains(query);
     });
 
@@ -50,7 +51,7 @@ class ChatroomRepo {
       return ChatroomModel.fromJson(newMap);
     }).toList();
 
-    list.sort((a,b) => a.update_date.compareTo(b.update_date));
+    list.sort((a, b) => a.update_date.compareTo(b.update_date));
     final orderList = list.reversed.toList();
 
     return orderList;
@@ -89,11 +90,26 @@ class ChatroomRepo {
   }
 
   // 이미지 업로드 (파이어베이스 스토리지)
+  // path 에 null 값이 들어오는 경우, assets의 default_img가 업로드
   // 업로드 이후 DownloadURL 반환
-  Future<String> uploadImage(String path, String id) async {
+  Future<String> uploadImage(String? path, String id) async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference storageRef = storage.ref();
-    final imageRef = storageRef.child('${DateTime.now().microsecondsSinceEpoch}_$id');
+    final imageRef =
+        storageRef.child('${DateTime.now().microsecondsSinceEpoch}_$id');
+
+    if (path == null) {
+      String _defaultImage = 'assets/images/default_img.jpg';
+      String _imageName = 'default';
+      Directory systemTempDir = Directory.systemTemp;
+      ByteData byteData = await rootBundle.load(_defaultImage);
+      File file = File("${systemTempDir.path}/$_imageName.jpeg");
+
+      await file.writeAsBytes(byteData.buffer
+          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+      path = file.path;
+    }
 
     await imageRef.putFile(File(path));
     final url = await imageRef.getDownloadURL();

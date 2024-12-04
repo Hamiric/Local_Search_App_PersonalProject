@@ -42,7 +42,7 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState>{
   // 새로운 채팅방을 DB에 넣는 메서드
   // 이미지도 스토리지에 업로드
   // 넣고 다시 DB를 읽기
-  Future<void> insertNewChatRoom(String id, String chatroom_name, String nickname, String password, String imgURL) async{
+  Future<void> insertNewChatRoom(String id, String chatroom_name, String nickname, String password, String? imgURL) async{
     final chatroomRepo = ChatroomRepo();
     var uuid = Uuid();
 
