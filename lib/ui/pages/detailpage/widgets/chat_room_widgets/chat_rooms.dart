@@ -99,7 +99,7 @@ class _ChatRoomsState extends State<ChatRooms> {
             ],
           ),
           Text(
-            'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅍㅌㅎ',
+            '개설자 : ${widget.detailState.chatRooms[widget.index].creater_info['nickname']}',
             maxLines: 1,
             style: TextStyle(
               color: Colors.grey,
@@ -150,6 +150,7 @@ class _ChatRoomsState extends State<ChatRooms> {
         return IconButton(
           onPressed: () {
             showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (BuildContext context) {
                   return deletePassWordCheckDialog(ref);
@@ -200,6 +201,7 @@ class _ChatRoomsState extends State<ChatRooms> {
           TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                controllerChecker.text = '';
               },
               child: Text('취소')),
           TextButton(
@@ -213,6 +215,7 @@ class _ChatRoomsState extends State<ChatRooms> {
                       widget.location.title);
 
                   Navigator.pop(context);
+                  controllerChecker.text = '';
                 }
               },
               child: Text('채팅방 삭제')),

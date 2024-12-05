@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_search_app_personalproject/data/model/chat_model.dart';
 import 'package:local_search_app_personalproject/data/repo/chat_repo.dart';
+import 'package:local_search_app_personalproject/data/repo/chatroom_repo.dart';
 
 class ChatState {
   bool chatNickNameChanged;
@@ -81,6 +82,9 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
       update_date: DateTime.now(), 
       member: member
     );
+
+    final chatroomRepo = ChatroomRepo();
+    chatroomRepo.updateById(chatroom_id, nickname);
 
     await readChat(chatroom_id);
   }

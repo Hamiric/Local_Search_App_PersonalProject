@@ -209,7 +209,7 @@ class _PulsRoomDialogState extends ConsumerState<PulsRoomDialog> {
                       controllerChatRoomName.text,
                       controllerNickName.text,
                       controllerPassWord.text,
-                      "");
+                      null);
                   Navigator.pop(context);
                 }
               },

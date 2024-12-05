@@ -89,6 +89,22 @@ class ChatroomRepo {
     }
   }
 
+  // 'chatroom'의 선택된 채팅방 데이터 업데이트
+  // 최신글, update_time 수정
+  Future<void> updateById(String chatroom_id, String nickname) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference collectionRef = firestore.collection('chatroom');
+
+    final docRef = collectionRef.doc(chatroom_id);
+
+    Map<String,dynamic> data = {
+      "update_date": DateTime.now().toIso8601String(),
+      "body": FieldValue.arrayUnion([{"nickname" : nickname}])
+    };
+
+    await docRef.update(data);
+  }
+
   // 'chatroom'의 선택된 채팅방 삭제 메서드
   // 삭제할때, 스토리지에 저장된 이미지도 같이 삭제해야 한다.
   // 채팅로그들도 삭제해야 함

@@ -11,7 +11,7 @@ class ChatRepo {
       required List<Map<String, dynamic>> member}) async {
     try {
       String url =
-          'https://local-search-app-35e90-default-rtdb.firebaseio.com/chatrooms.json';
+          'https://local-search-app-35e90-default-rtdb.firebaseio.com/$chatroom_id.json';
 
       final client = Client();
       final response = await client.post(Uri.parse(url),
@@ -64,17 +64,28 @@ class ChatRepo {
 
       final json = jsonDecode(response.body);
 
-      Map<String,dynamic> item = {
-        "chatroom_id": chatroom_id,
-        ...json
-      };
+      Map<String, dynamic> item = {"chatroom_id": chatroom_id, ...json};
 
       final data = ChatModel.fromJson(item);
 
       return [data];
     } catch (e) {
-      print('뭔가 오류');
+      print('채팅 데이터 없음');
     }
     return [];
+  }
+
+  // 특정 채팅방 지우면서, 채팅 db도 지우기
+  Future<void> delete(String chatroom_id) async {
+    try {
+      String url =
+          'https://local-search-app-35e90-default-rtdb.firebaseio.com/$chatroom_id.json';
+
+      final client = Client();
+      final response = await client.delete(Uri.parse(url));
+
+    } catch (e) {
+      print('채팅 지우기 오류');
+    }
   }
 }
