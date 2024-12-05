@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart';
 import 'package:local_search_app_personalproject/data/model/chat_model.dart';
 
@@ -74,6 +75,24 @@ class ChatRepo {
     }
     return [];
   }
+
+  // 데이터 실시간 읽기
+  Stream<List<ChatModel>> readByIdStream(String chatroom_id) {
+    final FirebaseDatabase database = FirebaseDatabase.instance;
+    DatabaseReference ref = database.ref().child(chatroom_id);
+
+    return ref.onValue.map((event){
+      final data = event.snapshot.value as Map<String,dynamic>;
+
+      Map<String,dynamic> item = {
+        "chatroom_id": chatroom_id,
+        ...data,
+      };
+
+      return [ChatModel.fromJson(item)];
+    });
+  }
+
 
   // 특정 채팅방 지우면서, 채팅 db도 지우기
   Future<void> delete(String chatroom_id) async {

@@ -89,12 +89,28 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
     await readChat(chatroom_id);
   }
 
-  // 특정 채팅방 읽기
+  // 특정 채팅방 읽기 (스트림 시작)
   Future<void> readChat(String chatroom_id) async{
     final chatRepo = ChatRepo();
     final chats = await chatRepo.readById(chatroom_id);
 
+    streamSetChatRoom(chatroom_id);
+
     state = ChatState(state.chatNickNameChanged, chats);
+  }
+
+  // 스트림을 통해 실시간 채팅 가져오기
+  void streamSetChatRoom(String chatroom_id){
+    final chatRepo = ChatRepo();
+
+    final stream = chatRepo.readByIdStream(chatroom_id);
+    final streamSubscription = stream.listen((chat){
+      state = ChatState(state.chatNickNameChanged, chat);
+    });
+    ref.onDispose((){
+      print('채팅 스트림 종료');
+      streamSubscription.cancel();
+    });
   }
 
 
