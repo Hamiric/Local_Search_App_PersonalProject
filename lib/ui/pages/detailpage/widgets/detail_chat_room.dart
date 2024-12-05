@@ -31,10 +31,13 @@ class DetailChatRoom extends StatelessWidget {
                           builder: (context) => Chatpage(detailState.chatRooms[index]),
                         ));
                   },
-                  child: ChatRooms(
-                    index: index,
-                    detailState: detailState,
-                    location: location,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: ChatRooms(
+                      index: index,
+                      detailState: detailState,
+                      location: location,
+                    ),
                   ));
             },
             separatorBuilder: (context, index) {

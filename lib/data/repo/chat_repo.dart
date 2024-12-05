@@ -81,18 +81,35 @@ class ChatRepo {
     final FirebaseDatabase database = FirebaseDatabase.instance;
     DatabaseReference ref = database.ref().child(chatroom_id);
 
-    return ref.onValue.map((event){
-      final data = event.snapshot.value as Map<String,dynamic>;
+    return ref.onValue.map((event) {
+      Map<Object?, Object?> rawData =
+          event.snapshot.value as Map<Object?, Object?>;
 
-      Map<String,dynamic> item = {
+      Map<String, dynamic> data = rawData.map((key, value) {
+        return MapEntry(key.toString(), value);
+      });
+
+      print(data);
+
+      Map<String, dynamic> item = {
         "chatroom_id": chatroom_id,
         ...data,
       };
 
-      return [ChatModel.fromJson(item)];
+      print(item);
+
+      // 아니 분명 Map<String,dynamic> 으로 형변환이 되어야 하는데;
+      // 위에 Future거는 잘되는데 왜 이건 안되는거야; (ㅠㅠ)
+      /// [ERROR:flutter/runtime/dart_vm_initializer.cc(41)] Unhandled Exception: type '_Map<Object?, Object?>' is not a subtype of type 'Map<String, dynamic>' in type cast
+
+      final value = ChatModel.fromJson(item);
+
+      print('whywhy >>> $item');
+      print('범인이 여기였어?');
+
+      return [value];
     });
   }
-
 
   // 특정 채팅방 지우면서, 채팅 db도 지우기
   Future<void> delete(String chatroom_id) async {
@@ -102,7 +119,6 @@ class ChatRepo {
 
       final client = Client();
       final response = await client.delete(Uri.parse(url));
-
     } catch (e) {
       print('채팅 지우기 오류');
     }

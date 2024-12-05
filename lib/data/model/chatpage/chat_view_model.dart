@@ -89,12 +89,12 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
     await readChat(chatroom_id);
   }
 
-  // 특정 채팅방 읽기 (스트림 시작)
+  // 특정 채팅방 읽기 (스트림 시작(스트림에 뭔가 문제가있음))
   Future<void> readChat(String chatroom_id) async{
     final chatRepo = ChatRepo();
     final chats = await chatRepo.readById(chatroom_id);
 
-    streamSetChatRoom(chatroom_id);
+    // streamSetChatRoom(chatroom_id);
 
     state = ChatState(state.chatNickNameChanged, chats);
   }

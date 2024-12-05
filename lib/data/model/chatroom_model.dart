@@ -4,7 +4,6 @@
   "update_date": DateTime.now(),
   "imgURL": "https://picsum.photos/300/300",
   "password": "1111",
-  "lastchat": "",
   "creater_info": {
     "nickname" : "tester",
     "imgURL" : "https://picsum.photos/300/300" -- 없어짐
