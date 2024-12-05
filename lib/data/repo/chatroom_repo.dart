@@ -57,6 +57,37 @@ class ChatroomRepo {
     return orderList;
   }
 
+  // 스트림으로 채팅방 현황 계속 가져오기
+  Stream<List<ChatroomModel>> getByIdStream(String query) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference collectionRef = firestore.collection('chatroom');
+
+    final stream = collectionRef.snapshots();
+
+    final newStream = stream.map((snapshot) {
+      final docs = snapshot.docs.where((doc) {
+        return doc.id.contains(query);
+      });
+
+      final list = docs.map((doc) {
+        final map = doc.data() as Map<String, dynamic>;
+        final newMap = {
+          'chatroom_id': doc.id,
+          ...map,
+        };
+
+        return ChatroomModel.fromJson(newMap);
+      }).toList();
+
+      list.sort((a, b) => a.update_date.compareTo(b.update_date));
+      final orderList = list.reversed.toList();
+
+      return orderList;
+    });
+
+    return newStream;
+  }
+
   // 'chatroom' 에 문서로 데이터 집어넣기
   // 즉, 새로운 채팅방 만드는 메서드
   Future<bool> insert(
@@ -97,9 +128,11 @@ class ChatroomRepo {
 
     final docRef = collectionRef.doc(chatroom_id);
 
-    Map<String,dynamic> data = {
+    Map<String, dynamic> data = {
       "update_date": DateTime.now().toIso8601String(),
-      "body": FieldValue.arrayUnion([{"nickname" : nickname}])
+      "body": FieldValue.arrayUnion([
+        {"nickname": nickname}
+      ])
     };
 
     await docRef.update(data);
