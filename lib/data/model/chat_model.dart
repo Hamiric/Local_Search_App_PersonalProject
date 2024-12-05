@@ -4,19 +4,21 @@
   "update_date": DateTime.now(),
   "member" : [
     {
-      "A": [
+      "A" : [
         {
-          "chat": "ABCD",
-          "update_time": "--", 
-        },
-      ]
-      "B": [
-        {
-          "chat": "ABCD",
-          "update_time": "--", 
+          "chat" : "ABCD",
+          "update_date" : DateTime.now().iso어쩌구 
         },
       ]
     },
+    {
+      "B" : [
+        {
+          "chat" : "ABCD",
+          "update_date" : DateTime.now().iso어쩌구 
+        }
+      ]
+    }
   ]
 }
 */
@@ -35,7 +37,7 @@ class ChatModel {
   ChatModel.fromJson(Map<String,dynamic> json) : this (
     chatroom_id: json['chatroom_id'],
     update_date: DateTime.parse(json['update_date']),
-    member: json['member']
+    member: (json['member'] as List).map((item) => item as Map<String, dynamic>).toList()
   );
 
   Map<String,dynamic> toJson (){

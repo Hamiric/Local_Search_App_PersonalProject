@@ -18,6 +18,12 @@ class _ChatpageState extends ConsumerState<Chatpage> {
   final TextEditingController controllerNickName = TextEditingController();
 
   @override
+  void didChangeDependencies() async {
+    await ref.read(chatViewModelProvier.notifier).readChat(widget.chatroom.chatroom_id);
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     controllerChat.dispose();
     controllerNickName.dispose();
@@ -41,7 +47,7 @@ class _ChatpageState extends ConsumerState<Chatpage> {
           child: Column(
             children: [
               Expanded(
-                child: ChatList(),
+                child: ChatList(chats: chatState.chats, nickname: controllerNickName.text,),
               ),
               Container(
                 color: Colors.white,
@@ -53,29 +59,30 @@ class _ChatpageState extends ConsumerState<Chatpage> {
                         children: [
                           chatState.chatNickNameChanged
                               ? SizedBox(
-                                width: 100,
-                                child: TextField(
-                                  controller: controllerNickName,
-                                  decoration: InputDecoration(
-                                    hintText: '닉네임',
-                                    hintStyle: TextStyle(
-                                      color: Colors.grey
-                                    )
-                                  ),
-                                )
-                              )
+                                  width: 100,
+                                  child: TextField(
+                                    controller: controllerNickName,
+                                    decoration: InputDecoration(
+                                        hintText: '닉네임',
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey)),
+                                  ))
                               : Text(controllerNickName.text),
                           SizedBox(
                             height: 10,
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              ref.read(chatViewModelProvier.notifier).changedChatNickName();
-                              if(controllerNickName.text.isEmpty){
+                              ref
+                                  .read(chatViewModelProvier.notifier)
+                                  .changedChatNickName();
+                              if (controllerNickName.text.isEmpty) {
                                 controllerNickName.text = 'ㅇㅇ';
                               }
                             },
-                            child: chatState.chatNickNameChanged ? Text('닉네임 확정하기') : Text('닉네임 수정하기'),
+                            child: chatState.chatNickNameChanged
+                                ? Text('닉네임 확정하기')
+                                : Text('닉네임 수정하기'),
                           )
                         ],
                       ),
@@ -98,17 +105,54 @@ class _ChatpageState extends ConsumerState<Chatpage> {
             ],
           ),
         ),
-        // 아 버튼위치 맛없네; 생각나면 집어넣으면서 하다보니 그만;;
         floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            ref.read(chatViewModelProvier.notifier).insertNewChat(widget.chatroom.chatroom_id, controllerNickName.text, controllerChat.text);
-            controllerChat.text = '';
+          onPressed: () {
+            if (chatState.chatNickNameChanged) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('닉네임을 설정해 주세요'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Center(child: Text('확인')),
+                        )
+                      ],
+                    );
+                  });
+            } else if (!chatState.chatNickNameChanged && controllerChat.text.isEmpty) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('채팅을 입력해 주세요'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Center(child: Text('확인')),
+                        )
+                      ],
+                    );
+                  });
+            } else {
+              ref.read(chatViewModelProvier.notifier).updateChat(
+                  widget.chatroom.chatroom_id,
+                  controllerNickName.text,
+                  controllerChat.text);
+              controllerChat.text = '';
+            }
           },
           child: Icon(
             Icons.send,
           ),
         ),
-        floatingActionButtonLocation: CustomFloatingActionButtonLocation(offsetY: 160),
+        floatingActionButtonLocation:
+            CustomFloatingActionButtonLocation(offsetY: 160),
       ),
     );
   }
