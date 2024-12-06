@@ -20,32 +20,39 @@ class DetailChatRoom extends StatelessWidget {
         OptionBar(location),
         // 채팅방 listview
         Expanded(
-          child: ListView.separated(
-            itemCount: detailState.chatRooms.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Chatpage(detailState.chatRooms[index]),
+          child: detailState.chatRooms.isEmpty
+              ? Center(
+                  child: Text(
+                  '채팅방이 없습니다.\n채팅방을 만들어 보세요!',
+                  textAlign: TextAlign.center,
+                ))
+              : ListView.separated(
+                  itemCount: detailState.chatRooms.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Chatpage(detailState.chatRooms[index]),
+                              ));
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          child: ChatRooms(
+                            index: index,
+                            detailState: detailState,
+                            location: location,
+                          ),
                         ));
                   },
-                  child: Container(
-                    color: Colors.transparent,
-                    child: ChatRooms(
-                      index: index,
-                      detailState: detailState,
-                      location: location,
-                    ),
-                  ));
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(
-                height: 10,
-              );
-            },
-          ),
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      height: 10,
+                    );
+                  },
+                ),
         ),
       ],
     );
