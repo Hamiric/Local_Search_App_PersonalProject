@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:local_search_app_personalproject/data/model/chat_model.dart';
 
 class ChatList extends StatelessWidget {
-  const ChatList({super.key, this.chats, this.nickname});
+  const ChatList({super.key, this.chats, this.nickname, this.scrollController});
 
   final chats;
   final nickname;
+
+  final scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class ChatList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: ListView.builder(
+        controller: scrollController,
         itemCount: chatList.length,
         itemBuilder: (context, index) {
           Map<String, dynamic> chat = chatList[index];

@@ -94,7 +94,7 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
     final chatRepo = ChatRepo();
     final chats = await chatRepo.readById(chatroom_id);
 
-    // streamSetChatRoom(chatroom_id);
+    streamSetChatRoom(chatroom_id);
 
     state = ChatState(state.chatNickNameChanged, chats);
   }

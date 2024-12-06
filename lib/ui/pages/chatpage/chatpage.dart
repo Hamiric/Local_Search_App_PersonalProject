@@ -17,10 +17,13 @@ class Chatpage extends ConsumerStatefulWidget {
 class _ChatpageState extends ConsumerState<Chatpage> {
   final TextEditingController controllerChat = TextEditingController();
   final TextEditingController controllerNickName = TextEditingController();
+  final ScrollController controllerScroll = ScrollController();
 
   @override
   void didChangeDependencies() async {
-    await ref.read(chatViewModelProvier.notifier).readChat(widget.chatroom.chatroom_id);
+    await ref
+        .read(chatViewModelProvier.notifier)
+        .readChat(widget.chatroom.chatroom_id);
     super.didChangeDependencies();
   }
 
@@ -28,6 +31,7 @@ class _ChatpageState extends ConsumerState<Chatpage> {
   void dispose() {
     controllerChat.dispose();
     controllerNickName.dispose();
+    controllerScroll.dispose();
     super.dispose();
   }
 
@@ -48,7 +52,11 @@ class _ChatpageState extends ConsumerState<Chatpage> {
           child: Column(
             children: [
               Expanded(
-                child: ChatList(chats: chatState.chats, nickname: controllerNickName.text,),
+                child: ChatList(
+                  chats: chatState.chats,
+                  nickname: controllerNickName.text,
+                  scrollController: controllerScroll,
+                ),
               ),
               Container(
                 color: Colors.white,
@@ -124,7 +132,8 @@ class _ChatpageState extends ConsumerState<Chatpage> {
                       ],
                     );
                   });
-            } else if (!chatState.chatNickNameChanged && controllerChat.text.isEmpty) {
+            } else if (!chatState.chatNickNameChanged &&
+                controllerChat.text.isEmpty) {
               showDialog(
                   context: context,
                   builder: (context) {
@@ -141,13 +150,16 @@ class _ChatpageState extends ConsumerState<Chatpage> {
                     );
                   });
             } else {
-              ref.read(chatViewModelProvier.notifier).updateChat(
-                  widget.chatroom.chatroom_id,
-                  controllerNickName.text,
-                  controllerChat.text);
+              ref
+                  .read(chatViewModelProvier.notifier)
+                  .updateChat(widget.chatroom.chatroom_id,
+                      controllerNickName.text, controllerChat.text)
+                  .then((e) {
+                    // 채팅이 정상처리됬다면, 스크롤 맨 아래로
+                controllerScroll
+                    .jumpTo(controllerScroll.position.maxScrollExtent);
+              });
               controllerChat.text = '';
-
-              // 채팅방의 update_date, 최근 채팅 부분 수정
             }
           },
           child: Icon(

@@ -82,32 +82,20 @@ class ChatRepo {
     DatabaseReference ref = database.ref().child(chatroom_id);
 
     return ref.onValue.map((event) {
-      Map<Object?, Object?> rawData =
-          event.snapshot.value as Map<Object?, Object?>;
 
-      Map<String, dynamic> data = rawData.map((key, value) {
-        return MapEntry(key.toString(), value);
-      });
+      // 형 변환이 안되서 어떻게든 해보려 한 흔적 ㅎㅎ
+      final a = event.snapshot.value;
+      final b = jsonEncode(a);
+      final data = jsonDecode(b);
 
-      print(data);
+      // final data = event.snapshot.value as Map<String,dynamic>;
 
       Map<String, dynamic> item = {
         "chatroom_id": chatroom_id,
         ...data,
       };
 
-      print(item);
-
-      // 아니 분명 Map<String,dynamic> 으로 형변환이 되어야 하는데;
-      // 위에 Future거는 잘되는데 왜 이건 안되는거야; (ㅠㅠ)
-      /// [ERROR:flutter/runtime/dart_vm_initializer.cc(41)] Unhandled Exception: type '_Map<Object?, Object?>' is not a subtype of type 'Map<String, dynamic>' in type cast
-
-      final value = ChatModel.fromJson(item);
-
-      print('whywhy >>> $item');
-      print('범인이 여기였어?');
-
-      return [value];
+      return [ChatModel.fromJson(item)];
     });
   }
 
