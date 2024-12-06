@@ -15,7 +15,7 @@ class ChatRepo {
           'https://local-search-app-35e90-default-rtdb.firebaseio.com/$chatroom_id.json';
 
       final client = Client();
-      final response = await client.post(Uri.parse(url),
+      await client.post(Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             "chatroom_id": chatroom_id,
@@ -40,7 +40,7 @@ class ChatRepo {
           'https://local-search-app-35e90-default-rtdb.firebaseio.com/$chatroom_id.json';
 
       final client = Client();
-      final response = await client.patch(Uri.parse(url),
+      await client.patch(Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             "update_date": update_date.toIso8601String(),
@@ -106,7 +106,7 @@ class ChatRepo {
           'https://local-search-app-35e90-default-rtdb.firebaseio.com/$chatroom_id.json';
 
       final client = Client();
-      final response = await client.delete(Uri.parse(url));
+      await client.delete(Uri.parse(url));
     } catch (e) {
       print('채팅 지우기 오류');
     }

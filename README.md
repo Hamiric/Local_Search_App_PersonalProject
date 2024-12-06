@@ -1,4 +1,4 @@
-# Battle RPG GAME
+# Local Search App
 개인 과제 - 지역 검색 앱
 
 ## 프로젝트 소개

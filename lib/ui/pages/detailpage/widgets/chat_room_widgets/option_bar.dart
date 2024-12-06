@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:local_search_app_personalproject/data/model/chatpage/chat_view_model.dart';
 import 'package:local_search_app_personalproject/data/model/detailpage/detail_view_model.dart';
 
 class OptionBar extends ConsumerStatefulWidget {

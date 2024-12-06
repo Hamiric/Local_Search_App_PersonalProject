@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:local_search_app_personalproject/data/model/chatpage/chat_view_model.dart';
-import 'package:local_search_app_personalproject/data/model/detailpage/detail_view_model.dart';
 import 'package:local_search_app_personalproject/ui/pages/chatpage/widgets/chat_list.dart';
 
 class Chatpage extends ConsumerStatefulWidget {
