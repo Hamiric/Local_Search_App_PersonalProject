@@ -35,7 +35,7 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState> {
     state = DetailState(index, state.chatRooms, state.selectedImagePath);
   }
 
-  // 현재 지역 채팅방 리스트를 가져오는 메서드 (스트림 시작)
+  // 현재 지역 채팅방 리스트를 가져오는 메서드
   // detailPage가 initState 할때 수행해야 할듯
   // 채팅방을 세팅한다는 의미
   Future<void> setChatRoom(String title) async {
@@ -43,24 +43,28 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState> {
     List<ChatroomModel> list = await chatroomRepo.getById(title);
 
     state.locationtitle = title;
-    streamSetChatRoom(title);
 
     state = DetailState(
         state.bottomNavigationBarSelectedIndex, list, state.selectedImagePath);
   }
 
   // 스트림을 통해 실시간 채팅방 리스트 가져오기
-  void streamSetChatRoom(String title){
+  void streamSetChatRoom(String title) {
     final chatroomRepo = ChatroomRepo();
 
     final stream = chatroomRepo.getByIdStream(title);
-    final streamSubscription = stream.listen((chatroom){
-      state = DetailState(state.bottomNavigationBarSelectedIndex, chatroom, state.selectedImagePath);
+    final streamSubscription = stream.listen((chatroom) {
+      state = DetailState(state.bottomNavigationBarSelectedIndex, chatroom,
+          state.selectedImagePath);
     });
-    ref.onDispose((){
-      print('스트림 종료');
-      streamSubscription.cancel();
-    });
+    try {
+      ref.onDispose(() {
+        print('스트림 종료');
+        streamSubscription.cancel();
+      });
+    } catch (e) {
+      print('이미 스트림 종료');
+    }
   }
 
   // 새로운 채팅방을 DB에 넣는 메서드
@@ -93,12 +97,16 @@ class DetailViewModel extends AutoDisposeNotifier<DetailState> {
     await chatRepo.update(
         chatroom_id: id + chatroomuuid,
         update_date: DateTime.now(),
-        member: [{
-          nickname : [{
-            "chat" : "시스템 : 채팅방이 생성되었습니다.",
-            "update_date" : DateTime.now().toIso8601String(),
-          }]
-        }]);
+        member: [
+          {
+            nickname: [
+              {
+                "chat": "시스템 : 채팅방이 생성되었습니다.",
+                "update_date": DateTime.now().toIso8601String(),
+              }
+            ]
+          }
+        ]);
 
     await setChatRoom(id);
   }

@@ -17,7 +17,8 @@ class _DetailPageState extends ConsumerState<DetailPage> {
 
   @override
   void initState() {
-    ref.read(detailViewModelProvier.notifier).setChatRoom(widget.location.title);
+    // ref.read(detailViewModelProvier.notifier).setChatRoom(widget.location.title);
+    ref.read(detailViewModelProvier.notifier).streamSetChatRoom(widget.location.title);
     super.initState();
   }
 

@@ -54,14 +54,17 @@ class ChatList extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(width: 50, child: Text(chat['member'])),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue[200],
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Center(child: Text(chat['chat'])),
+          SizedBox(width: 10,),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.blue[200],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Center(child: Text(chat['chat'], textAlign: TextAlign.center,)),
+              ),
             ),
           ),
         ],
@@ -75,17 +78,20 @@ class ChatList extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.orange[200],
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Center(child: Text(chat['chat'])),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.orange[200],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Center(child: Text(chat['chat'], textAlign: TextAlign.center,)),
+              ),
             ),
           ),
-          SizedBox(width: 50, child: Text(chat['member'], textAlign: TextAlign.end,)),
+          SizedBox(width: 30,),
+          Text(chat['member'], textAlign: TextAlign.end,),
         ],
       ),
     );

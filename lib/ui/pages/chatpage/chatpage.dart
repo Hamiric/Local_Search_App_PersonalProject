@@ -18,11 +18,10 @@ class _ChatpageState extends ConsumerState<Chatpage> {
   final ScrollController controllerScroll = ScrollController();
 
   @override
-  void didChangeDependencies() async {
-    await ref
-        .read(chatViewModelProvier.notifier)
-        .readChat(widget.chatroom.chatroom_id);
-    super.didChangeDependencies();
+  void initState() {
+    // ref.read(chatViewModelProvier.notifier).readChat(widget.chatroom.chatroom_id);
+    ref.read(chatViewModelProvier.notifier).streamSetChatRoom(widget.chatroom.chatroom_id);
+    super.initState();
   }
 
   @override
@@ -72,6 +71,7 @@ class _ChatpageState extends ConsumerState<Chatpage> {
                                   width: 100,
                                   child: TextField(
                                     controller: controllerNickName,
+                                    maxLength: 6,
                                     decoration: InputDecoration(
                                         hintText: '닉네임',
                                         hintStyle:

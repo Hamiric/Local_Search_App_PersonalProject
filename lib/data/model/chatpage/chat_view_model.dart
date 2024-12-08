@@ -10,25 +10,25 @@ class ChatState {
   ChatState(this.chatNickNameChanged, this.chats);
 }
 
-class ChatViewModel extends AutoDisposeNotifier<ChatState>{
-
+class ChatViewModel extends AutoDisposeNotifier<ChatState> {
   @override
-  ChatState build(){
+  ChatState build() {
     return ChatState(true, []);
   }
 
   // 채팅방 첫 채팅 입력 (put)
   // 자동적으로 앞에 ETag 가 붙는..
   // 일단은 쓰지 않는걸로.. (원하는 로직이 나오질 않네;)
-  Future<void> insertNewChat(String chatroom_id, String nickname, String text) async{
+  Future<void> insertNewChat(
+      String chatroom_id, String nickname, String text) async {
     final chatRepo = ChatRepo();
-    
+
     await chatRepo.insert(
       chatroom_id: chatroom_id,
-      update_date: DateTime.now(), 
+      update_date: DateTime.now(),
       member: [
         {
-          nickname : [
+          nickname: [
             {
               "chat": text,
               "update_date": DateTime.now().toIso8601String(),
@@ -45,7 +45,8 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
   // member 안의 nickname 확인 후
   // 같은 닉네임이 있으면 chat,update_date 추가
   // 같은 닉네임이 없으면, 새로운 member 추가후 chat,update_date 추가
-  Future<void> updateChat(String chatroom_id, String nickname, String text) async{
+  Future<void> updateChat(
+      String chatroom_id, String nickname, String text) async {
     final chatRepo = ChatRepo();
     final chats = await chatRepo.readById(chatroom_id);
 
@@ -53,8 +54,8 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
 
     // 같은 닉네임이 있는 경우
     bool isCheckNickName = false;
-    for(var i in member){
-      if(i.containsKey(nickname)){
+    for (var i in member) {
+      if (i.containsKey(nickname)) {
         i[nickname].add({
           "chat": text,
           "update_date": DateTime.now().toIso8601String(),
@@ -66,11 +67,11 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
     }
 
     // 같은 닉네임이 없는 경우
-    if(!isCheckNickName){
+    if (!isCheckNickName) {
       member.add({
-        nickname : [
+        nickname: [
           {
-            "chat" : text,
+            "chat": text,
             "update_date": DateTime.now().toIso8601String(),
           }
         ]
@@ -78,10 +79,7 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
     }
 
     await chatRepo.update(
-      chatroom_id: chatroom_id, 
-      update_date: DateTime.now(), 
-      member: member
-    );
+        chatroom_id: chatroom_id, update_date: DateTime.now(), member: member);
 
     final chatroomRepo = ChatroomRepo();
     chatroomRepo.updateById(chatroom_id, nickname);
@@ -89,8 +87,8 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
     await readChat(chatroom_id);
   }
 
-  // 특정 채팅방 읽기 (스트림 시작(스트림에 뭔가 문제가있음))
-  Future<void> readChat(String chatroom_id) async{
+  // 특정 채팅방 읽기 (스트림 시작)
+  Future<void> readChat(String chatroom_id) async {
     final chatRepo = ChatRepo();
     final chats = await chatRepo.readById(chatroom_id);
 
@@ -100,26 +98,30 @@ class ChatViewModel extends AutoDisposeNotifier<ChatState>{
   }
 
   // 스트림을 통해 실시간 채팅 가져오기
-  void streamSetChatRoom(String chatroom_id){
+  void streamSetChatRoom(String chatroom_id) {
     final chatRepo = ChatRepo();
 
     final stream = chatRepo.readByIdStream(chatroom_id);
-    final streamSubscription = stream.listen((chat){
+    final streamSubscription = stream.listen((chat) {
       state = ChatState(state.chatNickNameChanged, chat);
     });
-    ref.onDispose((){
-      print('채팅 스트림 종료');
-      streamSubscription.cancel();
-    });
+    try {
+      ref.onDispose(() {
+        print('채팅 스트림 종료');
+        streamSubscription.cancel();
+      });
+    } catch (e) {
+      print('이미 채팅 스트림 종료');
+    }
   }
 
-
   // 닉네임 입력 필드 활성화,비활성화
-  void changedChatNickName(){
+  void changedChatNickName() {
     state = ChatState(!state.chatNickNameChanged, state.chats);
   }
 }
 
-final chatViewModelProvier = AutoDisposeNotifierProvider<ChatViewModel,ChatState>((){
+final chatViewModelProvier =
+    AutoDisposeNotifierProvider<ChatViewModel, ChatState>(() {
   return ChatViewModel();
 });
