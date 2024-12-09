@@ -50,6 +50,7 @@ class HomeViewModel extends Notifier<HomeState>{
     } catch(e){
       // gps 버튼이 제대로 작동하지 않으므로 대응
       print('gps 미작동');
+      state = HomeState(state.locations, false, state.controllerText);
     }
   }
 
